@@ -3,16 +3,18 @@ include("connection.php");
 include("function.php");
 session_start();
 
-$edit = false;
+$form = false;
 $row = null;
-
 if (isset($_GET['id'])) {
     $row = getDataById($_GET['id']);
+} else {
+    $form = true;
+
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['edit'])) {
-        $edit = true;
+        $form = true;
         // echo 'ini berhasil ke klik bro';
         // echo $_POST['id'];
     } else if (isset($_POST['update'])) {
@@ -170,61 +172,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             unset($_SESSION['error']);
         }
         ?>
-        <!-- <form id="tambah_data" action="function.php" method="POST">
-            <label class="form-label mt-4" for="nama">Nama</label>
-            <input class="form-control" type="text" name="nama" id="nama" placeholder="masukkan nama anda">
-            <label class="form-label mt-4" for="role">Role</label>
-            <input class="form-control" type="text" name="role" id="role">
-            <label class="form-label mt-4" for="availability">Availability</label>
-            <select class="form-select" name="availability" id="availabilitySelect" aria-label="Default select example">
-                <option value="Full Time" selected>Full time</option>
-                <option value="Part Time">Part time</option>
-                <option value="Internship">Internship</option>
-            </select>
-            <label class="form-label mt-4" for="usia">Usia</label>
-            <input class="form-control" type="number" name="usia" id="usia">
-            <label class="form-label mt-4" for="lokasi">Lokasi</label>
-            <input class="form-control" type="text" name="lokasi" id="lokasi">
-            <label class="form-label mt-4" for="experience">Years Experience</label>
-            <input class="form-control" type="number" name="experience" id="experience">
-            <label class="form-label mt-4" for="email">Email</label>
-            <input class="form-control" type="text" name="email" id="email">
-            <div class="d-grid gap-2 my-4">
-                <input class="btn btn-success" type="submit" name="submit" value="submit">
-                <?php //if ($edit) { ?>
-                    <input class="btn btn-success" type="submit" name="Update" value="submit">
-                <?php //} ?>
-            </div>
-        </form> -->
-        <?php
-        ?>
         <form id="tambah_data" action="" method="POST">
             <input type="hidden" name="id" value="<?php echo $row['id'] ?? ''; ?>">
             <label class="form-label mt-4" for="nama">Nama</label>
             <input class="form-control" type="text" name="nama" id="nama" value="<?php echo $row['nama'] ?? ''; ?>"
-                <?php echo !$edit ? 'disabled' : ''; ?>>
+                <?php echo $form ? '' : 'disabled'; ?>>
             <label class="form-label mt-4" for="role">Role</label>
             <input class="form-control" type="text" name="role" id="role" value="<?php echo $row['role'] ?? ''; ?>"
-                <?php echo !$edit ? 'disabled' : ''; ?>>
+                <?php echo $form ? '' : 'disabled'; ?>>
             <label class="form-label mt-4" for="availability">Availability</label>
             <select class="form-select" name="availability" id="availabilitySelect" aria-label="Default select example"
-                <?php echo !$edit ? 'disabled' : ''; ?>>
+                <?php echo $form ? '' : 'disabled'; ?>>
                 <option value="Full Time" <?php echo (isset($row['availability']) && $row['availability'] == 'Full Time') ? 'selected' : ''; ?>>Full time</option>
                 <option value="Part Time" <?php echo (isset($row['availability']) && $row['availability'] == 'Part Time') ? 'selected' : ''; ?>>Part time</option>
                 <option value="Internship" <?php echo (isset($row['availability']) && $row['availability'] == 'Internship') ? 'selected' : ''; ?>>Internship</option>
             </select>
             <label class="form-label mt-4" for="usia">Usia</label>
             <input class="form-control" type="number" name="usia" id="usia" value="<?php echo $row['usia'] ?? ''; ?>"
-                <?php echo !$edit ? 'disabled' : ''; ?>>
+                <?php echo $form ? '' : 'disabled'; ?>>
             <label class="form-label mt-4" for="lokasi">Lokasi</label>
             <input class="form-control" type="text" name="lokasi" id="lokasi"
-                value="<?php echo $row['lokasi'] ?? ''; ?>" <?php echo !$edit ? 'disabled' : ''; ?>>
+                value="<?php echo $row['lokasi'] ?? ''; ?>" <?php echo $form ? '' : 'disabled'; ?>>
             <label class="form-label mt-4" for="experience">Years Experience</label>
             <input class="form-control" type="number" name="experience" id="experience"
-                value="<?php echo $row['experience'] ?? ''; ?>" <?php echo !$edit ? 'disabled' : ''; ?>>
+                value="<?php echo $row['experience'] ?? ''; ?>" <?php echo $form ? '' : 'disabled'; ?>>
             <label class="form-label mt-4" for="email">Email</label>
             <input class="form-control" type="text" name="email" id="email" value="<?php echo $row['email'] ?? ''; ?>"
-                <?php echo !$edit ? 'disabled' : ''; ?>>
+                <?php echo $form ? '' : 'disabled'; ?>>
             <div class="d-grid gap-2 my-4">
                 <?php if ($edit) { ?>
                     <input class="btn btn-success" type="submit" name="update" value="Update">
@@ -233,7 +207,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php } ?>
             </div>
         </form>
-
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
